@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,700');
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+body {
+    font-family: "Lato", sans-serif;
+    transition: background-color .5s;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.sidenav {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 11111;
+    top: 0;
+    left: 0;
+    background-color: #333;
+    background-color: #dfe9f7;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    /*height: 650px;*/
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+    margin-left: 250px;
+    position: relative;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+.chatSection{
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+.navbar-header span{
+  font-size: 30px;
+  cursor: pointer;
+}
+.closebtn{
+  cursor: pointer;
+}
+.bottom-fixed-top {
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index: 111;
+    bottom: 0px;
+}
+.input-box .form-control{
+  height: 60px;
+    border-radius: 0px;
+    background: #dfe9f785;
+    border: 1px solid #b4b4ff;
+}
+.single-text{
+  border: 3px solid #e2dfdf;
+    min-height: 47px;
+    width: 80%;
+    border-radius: 0px 5px 4px 22px;
+    padding: 5px 10px;
+    background: #cccccc29;
+    color: #552aa2;
+    font-style: 14px;
+    font-family: 'Roboto Slab', serif;
+
+}
+.media-heading{
+  color: #7b7b7b;
+  font-family: 'Roboto Slab', serif;
+}
+/* Spinner */
+.spinner {
+  margin: 0;
+  text-align: center;
+}
+
+.spinner > div {
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  background: rgba(0,0,0,1);
+}
+ 
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes sk-bouncedelay {
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0)
+  }
+  40% {
+    -webkit-transform: scale(1.0)
+  }
+}
+
+@keyframes sk-bouncedelay {
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
