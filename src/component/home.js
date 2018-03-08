@@ -14,12 +14,13 @@ class Home extends Component {
         }
         this.scrollToBottom = this.scrollToBottom.bind(this);
         this.checkName = this.checkName.bind(this);
+
         this.state = {
-            messages: [],
-            text: '',
-            name:name,
-            users:[],
             animation: 'none',
+            name:name,
+            text: '',
+            messages: [],
+            users:[],
             dbName:'chatRoom',
         }
     }
@@ -28,6 +29,12 @@ class Home extends Component {
         document.getElementById("mySidenav").style.width = "0";
         document.getElementById("main").style.marginLeft = "0";
         document.body.style.backgroundColor = "white";
+    }
+
+    openNav = () => {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+        document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
     }
     
     componentWillMount() {
@@ -94,8 +101,8 @@ class Home extends Component {
         let msg = this.state.text;
         let dbName = this.state.dbName;
         const rootRef = firebase.database().ref().child(dbName);
-        rootRef.push().set({ name: name, msg: msg });
-        this.setState({ user:this.state.name,text: '' });
+        rootRef.push().set({ time:Date.now(),name: name, msg: msg });
+        this.setState({text: '' });
         // var ScrollBox = document.getElementById('chartBox');
         // var scrollHeight = ScrollBox.offsetHeight;
         // console.log(scrollHeight);
@@ -113,16 +120,19 @@ class Home extends Component {
         //let blank = [];
         //this.setState({ messages:blank});
         //let rules = this.state.messages.slice();
-        //rules.push('');
         //console.log(rules);
-        let msggg = [];
-        this.setState({messages:[...msggg]});
-        let msgs = this.state.messages;
+        //rules.push('');
+        this.setState({messages:[]});
+        //this.state.messages = [];
+        let msgs = [];
+        //let msgs = this.state.messages;
         let dbName = groupDB;
-        this.setState({ dbName: groupDB })
+        //this.setState({ dbName: groupDB })
+        //this.state.dbName = groupDB;
+        this.setState({dbName:dbName});
         const rootRef = firebase.database().ref().child(dbName);
         rootRef.on('child_added', snap => {
-            msgs.push({ name: snap.val().name, msg: snap.val().msg })
+            msgs.push({ time:snap.val().time,name: snap.val().name, msg: snap.val().msg })
             
         });
         this.setState({ messages: msgs })
@@ -132,42 +142,94 @@ class Home extends Component {
         
     }
     singleChat = (person)=>{
-        let blank = [];
-        this.setState({ messages:[ ...blank] });
+        //let blank = [];
+        this.setState({ messages:[] });
         // let rules = this.state.messages.slice();
         // rules.push('');
-        // let name = this.state.name; 
-        let msgs = this.state.messages;
+        // let name = this.state.name;
+        let givenDB = this.state.name+'_'+person;
+        let fromDB = person+'_'+this.state.name;
+        //this.state.messages = [];
+        //this.state.dbName = givenDB;
+        let msgs = [];
         // let singleDB = name+'_'+person;
-        // this.setState({ dbName: singleDB });
-        // const rootRef = firebase.database().ref().child(singleDB);
-        // rootRef.on('child_added', snap => {
-        //     msgs.push({ name: snap.val().name, msg: snap.val().msg })
-        //     this.setState({ messages: msgs })
-        // });
+        this.setState({ dbName: givenDB });
+        const rootRef = firebase.database().ref().child(givenDB);
+        rootRef.on('child_added', snap => {
 
-        console.log(this.state.messages);
-        console.log(this.state.dbName);
-        console.log(msgs);
+            //this.state.messages = msgs;
+            console.log(snap.val())
+            if(snap.val()) {
+                msgs.push({ time:snap.val().time,name: snap.val().name, msg: snap.val().msg })
+                //this.setState({messages: msgs})
+            }
+        });
+        const rootRef2 = firebase.database().ref().child(fromDB);
+        rootRef2.on('child_added', snap => {
 
+            //this.state.messages = msgs;
+            console.log(snap.val())
+            if(snap.val()) {
+                msgs.push({ time:snap.val().time,name: snap.val().name, msg: snap.val().msg })
+                //this.setState({messages: msgs})
+            }
+        });
+        //let msgs2 = [];
+        //let msgs2 = msgs;
+
+        //msgs.push({name:'other user',msg:'msg from other user'})
+        this.setState({messages: msgs})
+
+        //console.log(this.state.messages);
+        //console.log(this.state.dbName);
+        //console.log(msgs);
+
+    }
+    shortMessageFromTime = (a,b)=>{
+        return a.time > b.time;
     }
 
     render() {
-        //console.log(this.state.name);
-        //console.log(this.state.dbName);
-        //console.log(this.state.messages);
+
+        //let shortData = []
+        //shortData = this.state.messages.sort(shortMessageFromTime);
+        //this.state.messages.sort(shortMessageFromTime);
+        //console.log('check: '+ JSON.stringify(shortData))
+        //console.log(shortData)
         return (
             <div>
+                <nav className="navbar navbar-default navbar-fixed-top">
+                    <div className="container-fluid">
+                        <div className="navbar-header">
+                            <span onClick={this.openNav}>&#9776; </span>
+                        </div>
+                        <div>
+                            <ul className="nav navbar-nav">
+                                {/*<li><NavLink exact activeClassName='active' to="/">
+                                    Login
+                                </NavLink></li>
+
+                                <li><NavLink exact activeClassName='active' to="/home">
+                                    Home
+                                </NavLink></li>
+
+                                <li><NavLink exact activeClassName='active' to="/single/:name">
+                                    Single
+                                </NavLink></li>*/}
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
 
                 <div id="mySidenav" className="sidenav">
                     <div>
                     <a className="closebtn" onClick={this.closeNav}>&times;</a>
-                        <a 
+                        <a
                             onClick={() => { this.groupChat('chatRoom');}}>
                             Group Room
                         </a>
                     {this.state.users.map(
-                            (user, i) => 
+                            (user, i) =>
                             <a onClick={() => { this.singleChat(user.name)}} key={i}>{user.name}</a>
                     )}
                     </div>
@@ -178,22 +240,46 @@ class Home extends Component {
                         <div className="container-fluid">
                             <div className="row">
                                 <div ref={(el) => { this.messagesContainer = el; }}>
-                                    {this.state.messages.map(
+                                    {this.state.messages.sort(this.shortMessageFromTime).map(
 
-                                        (message, i) =>
-                                            <div key={i}>
-                                                <div className="media">
-                                                    <div className="media-left">
-                                                        <a>
-                                                            <img className="media-object img-circle" src="http://via.placeholder.com/50x50" alt="" />
-                                                        </a>
+                                        (message, i) => {
+                                            if(message.name === this.state.name){
+                                                return(
+                                                    <div key={i}  style={{marginBottom:'35px'}}>
+                                                        <div className="media">
+                                                            <div className="media-left">
+                                                                <a>
+                                                                    <img className="media-object img-circle" src="http://via.placeholder.com/50x50" alt="" />
+                                                                </a>
+                                                            </div>
+
+                                                            <div className="media-body">
+                                                                <h4 className="media-heading" style={{color:'#673AB7'}}>{message.name}</h4>
+                                                                <div className="single-text" style={{border:'3px solid #673ab76e'}}> {message.msg} </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className="media-body">
-                                                        <h4 className="media-heading">{message.name}</h4>
-                                                        <div className="single-text"> {message.msg} </div>
+                                                )
+                                            }else {
+                                                return(
+                                                    <div key={i} style={{marginBottom:'35px'}}>
+                                                        <div className="media">
+                                                            <div className="media-left">
+                                                                <a>
+                                                                    <img className="media-object img-circle" src="http://via.placeholder.com/50x50" alt="" />
+                                                                </a>
+                                                            </div>
+
+                                                            <div className="media-body">
+                                                                <h4 className="media-heading">{message.name}</h4>
+                                                                <div className="single-text"> {message.msg} </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
+                                                )
+                                            }
+                                        }
+
 
                                     )}
                                     <div className='spinner' style={{ display: this.state.animation }}>

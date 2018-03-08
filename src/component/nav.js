@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import {NavLink} from 'react-router-dom';
+//import {NavLink} from 'react-router-dom';
 
 class Nav extends Component {
     openNav = () => {
@@ -10,7 +10,7 @@ class Nav extends Component {
     render(){
         return(
             <div>
-                <nav className="navbar navbar-default navbar-fixed-top">
+                {/*<nav className="navbar navbar-default navbar-fixed-top">
                     <div className="container-fluid">
                         <div className="navbar-header">
                             <span onClick={this.openNav}>&#9776; </span>
@@ -25,13 +25,13 @@ class Nav extends Component {
                                     Home
                                 </NavLink></li>
                                     
-                                {/*<li><NavLink exact activeClassName='active' to="/single/:name">
+                                <li><NavLink exact activeClassName='active' to="/single/:name">
                                     Single
-                                </NavLink></li>*/}
+                                </NavLink></li>
                             </ul>
                         </div>
                     </div>
-                </nav>
+                </nav>*/}
             </div>
         )
     }

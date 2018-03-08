@@ -7,9 +7,14 @@ class Login extends Component{
     constructor(props){
         super(props);
         this.state = {
-            userName: null
+            userName: null,
+            error:'none'
         }
     }
+
+    // componentWillMount(){
+    //     this.setState({error:display})
+    // }
 
    userLogin = (e)=>{
     e.preventDefault();
@@ -22,11 +27,12 @@ class Login extends Component{
                 state: { name: userName }
             });
         }else{
-            console.log('here');
+            this.setState({error:'block'})
         }
     })
     
    }
+
 
     render(){
         return(
@@ -35,7 +41,13 @@ class Login extends Component{
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6 col-md-offset-3" style={{ marginTop: '15rem', background:'#dfe9f7',borderRadius:'4px'}}>
+
                             <form style={{padding:'25px 20px'}}>
+
+                                <div className="alert alert-danger" style={{display:this.state.error}}>
+                                    <strong>Opsss!</strong> You Are Not in Our System
+                                </div>
+
                                 <div className="form-group">
                                     <label>Email address</label>
                                     <input 
