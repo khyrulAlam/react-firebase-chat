@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import ReactDOM from 'react-dom';
+import moment from 'moment'
 
+
+
+//mini Components
+import UserList from "./min-component/userList";
 
 
 class Home extends Component {
@@ -12,8 +17,6 @@ class Home extends Component {
             name = props.location.state.name
             console.log(props.location.state.name);
         }
-        this.scrollToBottom = this.scrollToBottom.bind(this);
-        this.checkName = this.checkName.bind(this);
         this.state = {
             messages: [],
             text: '',
@@ -24,207 +27,192 @@ class Home extends Component {
         }
     }
 
-    closeNav = () => {
-        document.getElementById("mySidenav").style.width = "0";
-        document.getElementById("main").style.marginLeft = "0";
-        document.body.style.backgroundColor = "white";
-    }
-    
+    //React Hook
     componentWillMount() {
         let msgs = this.state.messages;
         let users = this.state.users;
         let dbName = this.state.dbName;
+        //Group Chat Conversation fetch
         const rootRef = firebase.database().ref().child(dbName);
         rootRef.on('child_added', snap => {
-            msgs.push({ name: snap.val().name, msg: snap.val().msg })
-            this.setState({ messages: msgs })
+            //msgs.push({ name: snap.val().name, msg: snap.val().msg });
+            msgs.push({ time: snap.val().time, name: snap.val().name, msg: snap.val().msg });
+            this.setState({ messages: msgs });
         });
-        const rootRef2 = firebase.database().ref().child('animation');
-        //const animRef = rootRef2.child('display')
-        rootRef2.on('child_added', snap => {
-            this.setState({ animation: snap.val() })
 
-        })
-
+        //User LIst fetch
         const userRef = firebase.database().ref().child('usersTable');
-        userRef.on('child_added',snap=>{
-            users.push({name:snap.val().name})
-            this.setState({users: users })
+        userRef.on('child_added', snap => {
+            users.push({ name: snap.val().name })
+            this.setState({ users: users })
             //console.log(snap.val());
-            
-        })
 
-        //this.setState({ messages: [] });
+        });
+        console.log(msgs);
+        
     }
     componentDidMount() {
-        this.scrollToBottom();
         this.checkName();
-
     }
     componentDidUpdate() {
         this.scrollToBottom();
-        //this.setState({ messages: [] });
     }
-
     checkName = () => {
         if (this.state.name == null) {
-            // let name = prompt('Please Enter Your Name', '');
-            // if (name == null) {
-            //     this.checkName();
-            // } else {
-            //     this.setState({ name: name });
-            // }
             this.props.history.push('/')
         }
     }
-    scrollToBottom = () => {
 
-        const messagesContainer = ReactDOM.findDOMNode(this.messagesContainer);
-        //messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        // const messagesContainer = document.body;
-        // messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        // var elem = document.getElementById('yourId'); 
-        // elem.scrollTop = elem.scrollHeight;
-        // console.log(elem.scrollHeight);
-        window.scroll(0, messagesContainer.scrollHeight);
-    };
-    pushMsg = (event) => {
-        event.preventDefault();
-        let name = this.state.name;
-        let msg = this.state.text;
-        let dbName = this.state.dbName;
-        const rootRef = firebase.database().ref().child(dbName);
-        rootRef.push().set({ name: name, msg: msg });
-        this.setState({ user:this.state.name,text: '' });
-        // var ScrollBox = document.getElementById('chartBox');
-        // var scrollHeight = ScrollBox.offsetHeight;
-        // console.log(scrollHeight);
-        // scrollHeight.scrollTo(0, scrollHeight);
-    }
-    displayBlock = () => {
-        const rootRef2 = firebase.database().ref().child('animation');
-        rootRef2.push().set('block')
-    }
-    displayNone = () => {
-        const rootRef2 = firebase.database().ref().child('animation');
-        rootRef2.push().set('none')
-    }
-    groupChat = (groupDB)=>{
-        //let blank = [];
-        //this.setState({ messages:blank});
-        //let rules = this.state.messages.slice();
-        //rules.push('');
-        //console.log(rules);
+    //Select Group Chat Option
+    groupChat = (groupDB) => {
         let msggg = [];
-        this.setState({messages:[...msggg]});
+        this.setState({ messages: [...msggg] });
         let msgs = this.state.messages;
         let dbName = groupDB;
         this.setState({ dbName: groupDB })
         const rootRef = firebase.database().ref().child(dbName);
         rootRef.on('child_added', snap => {
-            msgs.push({ name: snap.val().name, msg: snap.val().msg })
-            
+            msgs.push({ time: snap.val().time, name: snap.val().name, msg: snap.val().msg })
+
         });
         this.setState({ messages: msgs })
-        console.log(msgs);
-        //console.log(this.state.dbName);  
-        //console.log(groupDB);  
-        
+        console.log(msgs);  
     }
-    singleChat = (person)=>{
-        let blank = [];
-        this.setState({ messages:[ ...blank] });
-        // let rules = this.state.messages.slice();
-        // rules.push('');
-        // let name = this.state.name; 
-        let msgs = this.state.messages;
-        // let singleDB = name+'_'+person;
-        // this.setState({ dbName: singleDB });
-        // const rootRef = firebase.database().ref().child(singleDB);
-        // rootRef.on('child_added', snap => {
-        //     msgs.push({ name: snap.val().name, msg: snap.val().msg })
-        //     this.setState({ messages: msgs })
-        // });
+    //Select Single Person
+    singleChat = (person) => {
+        this.setState({ messages: [] });
+        let givenDB = this.state.name + '_' + person;
+        let fromDB = person + '_' + this.state.name;
+        let msgs = [];
+        this.setState({ dbName: givenDB });
+        const rootRef = firebase.database().ref().child(givenDB);
+        rootRef.on('child_added', snap => {
 
-        console.log(this.state.messages);
-        console.log(this.state.dbName);
-        console.log(msgs);
+            //this.state.messages = msgs;
+            //console.log(snap.val())
+            if (snap.val()) {
+                msgs.push({ time: snap.val().time, name: snap.val().name, msg: snap.val().msg })
+                //this.setState({messages: msgs})
+            }
+        });
+        const rootRef2 = firebase.database().ref().child(fromDB);
+        rootRef2.on('child_added', snap => {
 
+            //this.state.messages = msgs;
+            //console.log(snap.val())
+            if (snap.val()) {
+                msgs.push({ time: snap.val().time, name: snap.val().name, msg: snap.val().msg })
+                //this.setState({messages: msgs})
+            }
+        });
+
+        this.setState({ messages: msgs })
+    }
+    //Sorting by time
+    srotingMessageFromTime = (a, b) => {
+        return a.time > b.time;
+    }
+
+    //Send Message
+    pushMsg = (event) => {
+        event.preventDefault();
+
+        let name = this.state.name;
+        let msg = this.state.text;
+        let dbName = this.state.dbName;
+        console.log(name,msg,dbName);
+        // const rootRef = firebase.database().ref().child(dbName);
+        // rootRef.push().set({ time: Date.now(), name: name, msg: msg });
+        this.setState({ text: '' });
+    }
+
+    //Scroll message UI-kit
+    scrollToBottom = () => {
+        const messagesContainer = ReactDOM.findDOMNode(this.messagesContainer);
+        //console.log(messagesContainer.scrollHeight);
+        messagesContainer.scroll(0, messagesContainer.scrollHeight);
+    };
+
+    //Navigation Open close method
+    closeNav = () => {
+        let left = document.querySelector('.left__section');
+        let cNav = document.querySelector('.closeNav');
+        let oNav = document.querySelector('.openNav');
+        left.style.flex = '0';
+        cNav.style.display = 'none';
+        oNav.style.display = 'block';
+    }
+    openNav = () => {
+        let left = document.querySelector('.left__section');
+        let cNav = document.querySelector('.closeNav');
+        let oNav = document.querySelector('.openNav');
+        left.style.flex = '1';
+        cNav.style.display = 'block';
+        oNav.style.display = 'none';
     }
 
     render() {
-        //console.log(this.state.name);
-        //console.log(this.state.dbName);
-        //console.log(this.state.messages);
         return (
             <div>
 
-                <div id="mySidenav" className="sidenav">
-                    <div>
-                    <a className="closebtn" onClick={this.closeNav}>&times;</a>
-                        <a 
-                            onClick={() => { this.groupChat('chatRoom');}}>
-                            Group Room
-                        </a>
-                    {this.state.users.map(
-                            (user, i) => 
-                            <a onClick={() => { this.singleChat(user.name)}} key={i}>{user.name}</a>
-                    )}
-                    </div>
-                </div>
-
-                <div id="main">
-                    <div className="chatSection">
-                        <div className="container-fluid">
-                            <div className="row">
-                                <div ref={(el) => { this.messagesContainer = el; }}>
-                                    {this.state.messages.map(
-
-                                        (message, i) =>
-                                            <div key={i}>
-                                                <div className="media">
-                                                    <div className="media-left">
-                                                        <a>
-                                                            <img className="media-object img-circle" src="http://via.placeholder.com/50x50" alt="" />
-                                                        </a>
+                <div className="main__container">
+                    <div className="wrapper">
+                        <div className="left__section">
+                            <span className="openNav" onClick={this.openNav}>&#9776;</span>
+                            <span className="closeNav" onClick={this.closeNav}>&#9776;</span>
+                            <div className="userList">
+                                <a
+                                    onClick={() => { this.groupChat('chatRoom'); }}>
+                                    Group Chat
+                                </a>
+                                <UserList users={this.state.users} />
+                            </div>
+                        </div>
+                        <div className="right__section">
+                            <div className="message__box" ref={(el) => { this.messagesContainer = el; }}>
+                                {this.state.messages.sort(this.srotingMessageFromTime).map(
+                                    (message, i) =>
+                                        {
+                                        if (message.name === this.state.name){
+                                                return(
+                                                    <div className="msg__text" key={i}>
+                                                        <img src="http://i.pravatar.cc/50?img=50" alt="avatar" />
+                                                        <span>
+                                                            <strong style={{ textTransform: 'capitalize', color: '#9E9E9E' }}>{message.name}</strong><br />
+                                                            {message.msg}
+                                                            <br />
+                                                            <small style={{ color: '#9E9E9E' }}>{moment(message.time).fromNow()}</small>
+                                                        </span>
                                                     </div>
-                                                    <div className="media-body">
-                                                        <h4 className="media-heading">{message.name}</h4>
-                                                        <div className="single-text"> {message.msg} </div>
+                                                )
+                                            }else{
+                                                return(
+                                                    <div className="msg__text__right" key={i}>
+                                                        <img src="http://i.pravatar.cc/50" alt="avatar" />
+                                                        <span>
+                                                            <strong style={{ textTransform: 'capitalize', color: '#9E9E9E' }}>{message.name}</strong><br />
+                                                            {message.msg}
+                                                            <br/>
+                                                            <small style={{ color:'#9E9E9E'}}>{moment(message.time).fromNow()}</small>
+                                                        </span>
                                                     </div>
-                                                </div>
-                                            </div>
-
-                                    )}
-                                    <div className='spinner' style={{ display: this.state.animation }}>
-                                        <div className='bounce1'></div>
-                                        <div className='bounce2'></div>
-                                        <div className='bounce3'></div>
-                                    </div>
-                                </div>
-
-
-
-
-                                <div className="bottom-fixed-top">
-                                    <div>
-                                        <form>
-                                            <div className="input-box">
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    onChange={(e) => { this.setState({ text: e.target.value }) }}
-                                                    value={this.state.text}
-                                                    onFocus={this.displayBlock}
-                                                    onBlur={this.displayNone}
-                                                />
-                                            </div>
-                                            <button type="submit" className="hidden" onClick={this.pushMsg} > Submit </button>
-                                        </form>
-                                    </div>
-                                </div>
+                                                )
+                                            }
+                                        }
+                                    )
+                                }
 
                             </div>
+                            <form>
+                                <div className="message__type__box">
+                                    <input
+                                        placeholder="Type Your Message"
+                                        onChange={(e) => { this.setState({ text: e.target.value }) }}
+                                        value={this.state.text}
+                                    />
+                                    <button type="submit" onClick={this.pushMsg} >Send</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

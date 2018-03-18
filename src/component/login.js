@@ -44,11 +44,7 @@ class Login extends Component{
                                         className="form-control" placeholder="Email" 
                                     />
                                 </div>
-                                <div className="form-group">
-                                    <label>Password</label>
-                                    <input type="password" className="form-control" placeholder="Password" />
-                                </div>
-                                <button onClick={this.userLogin} className="btn btn-default">Submit</button>
+                                <button onClick={this.userLogin} className="btn btn-default">Enter</button>
                                 
                             </form>
                         </div>
