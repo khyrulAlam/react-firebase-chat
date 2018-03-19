@@ -13,12 +13,20 @@ class UserList extends Component{
             <div style={styleDiv}>
                 
                 {
-                    this.props.users.map(
+                    this.props.usersList.map(
                         (user, i) =>
-                            <a onClick={() => { this.singleChat(user.name) }} key={i}>
-                                <img src="http://i.pravatar.cc/30" alt="avatar" />
-                                <span>{user.name}</span>
-                            </a>
+                            {if(user.name !== this.props.user){
+                                return (
+                                    <a onClick={() => { this.props.singleChat(user.name) }} key={i}>
+                                        <img src="http://i.pravatar.cc/30" alt="avatar" />
+                                        <span>{user.name}</span>
+                                    </a>
+                                )
+                            }else{
+                                return(
+                                    <span key={i}></span>
+                                )
+                            }}
                     )
                 }
 

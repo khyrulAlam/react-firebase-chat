@@ -48,7 +48,7 @@ class Home extends Component {
             //console.log(snap.val());
 
         });
-        console.log(msgs);
+        //console.log(msgs);
         
     }
     componentDidMount() {
@@ -80,6 +80,7 @@ class Home extends Component {
     }
     //Select Single Person
     singleChat = (person) => {
+
         this.setState({ messages: [] });
         let givenDB = this.state.name + '_' + person;
         let fromDB = person + '_' + this.state.name;
@@ -87,9 +88,6 @@ class Home extends Component {
         this.setState({ dbName: givenDB });
         const rootRef = firebase.database().ref().child(givenDB);
         rootRef.on('child_added', snap => {
-
-            //this.state.messages = msgs;
-            //console.log(snap.val())
             if (snap.val()) {
                 msgs.push({ time: snap.val().time, name: snap.val().name, msg: snap.val().msg })
                 //this.setState({messages: msgs})
@@ -97,15 +95,11 @@ class Home extends Component {
         });
         const rootRef2 = firebase.database().ref().child(fromDB);
         rootRef2.on('child_added', snap => {
-
-            //this.state.messages = msgs;
-            //console.log(snap.val())
             if (snap.val()) {
                 msgs.push({ time: snap.val().time, name: snap.val().name, msg: snap.val().msg })
                 //this.setState({messages: msgs})
             }
         });
-
         this.setState({ messages: msgs })
     }
     //Sorting by time
@@ -165,7 +159,7 @@ class Home extends Component {
                                     onClick={() => { this.groupChat('chatRoom'); }}>
                                     Group Chat
                                 </a>
-                                <UserList users={this.state.users} />
+                                <UserList usersList={this.state.users} user={this.state.name} singleChat={this.singleChat.bind(this)}/>
                             </div>
                         </div>
                         <div className="right__section">
