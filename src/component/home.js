@@ -19,9 +19,9 @@ class Home extends Component {
         }
         this.state = {
             messages: [],
-            text: '',
-            name:name,
             users:[],
+            name:name,
+            text: '',
             animation: 'none',
             dbName:'chatRoom',
         }
@@ -73,15 +73,15 @@ class Home extends Component {
         const rootRef = firebase.database().ref().child(dbName);
         rootRef.on('child_added', snap => {
             msgs.push({ time: snap.val().time, name: snap.val().name, msg: snap.val().msg })
-
+            this.setState({ messages: msgs })
         });
-        this.setState({ messages: msgs })
-        console.log(msgs);  
+        //console.log(msgs);  
     }
     //Select Single Person
     singleChat = (person) => {
 
         this.setState({ messages: [] });
+
         let givenDB = this.state.name + '_' + person;
         let fromDB = person + '_' + this.state.name;
         let msgs = [];
@@ -90,34 +90,33 @@ class Home extends Component {
         rootRef.on('child_added', snap => {
             if (snap.val()) {
                 msgs.push({ time: snap.val().time, name: snap.val().name, msg: snap.val().msg })
-                //this.setState({messages: msgs})
+                this.setState({messages: msgs})
             }
         });
         const rootRef2 = firebase.database().ref().child(fromDB);
         rootRef2.on('child_added', snap => {
             if (snap.val()) {
                 msgs.push({ time: snap.val().time, name: snap.val().name, msg: snap.val().msg })
-                //this.setState({messages: msgs})
+                this.setState({messages: msgs})
             }
         });
-        this.setState({ messages: msgs })
+        //console.log(this.state.messages);
+        //console.log(msgs);
+
     }
-    //Sorting by time
-    srotingMessageFromTime = (a, b) => {
-        return a.time > b.time;
-    }
+    
 
     //Send Message
     pushMsg = (event) => {
         event.preventDefault();
-
         let name = this.state.name;
         let msg = this.state.text;
         let dbName = this.state.dbName;
-        console.log(name,msg,dbName);
-        // const rootRef = firebase.database().ref().child(dbName);
-        // rootRef.push().set({ time: Date.now(), name: name, msg: msg });
+        const rootRef = firebase.database().ref().child(dbName);
+        rootRef.push().set({ time: Date.now(), name: name, msg: msg });
         this.setState({ text: '' });
+        console.log('message send');
+        
     }
 
     //Scroll message UI-kit
@@ -127,23 +126,11 @@ class Home extends Component {
         messagesContainer.scroll(0, messagesContainer.scrollHeight);
     };
 
-    //Navigation Open close method
-    closeNav = () => {
-        let left = document.querySelector('.left__section');
-        let cNav = document.querySelector('.closeNav');
-        let oNav = document.querySelector('.openNav');
-        left.style.flex = '0';
-        cNav.style.display = 'none';
-        oNav.style.display = 'block';
+    //Sorting by time
+    srotingMessageFromTime = (a, b) => {
+        return a.time > b.time;
     }
-    openNav = () => {
-        let left = document.querySelector('.left__section');
-        let cNav = document.querySelector('.closeNav');
-        let oNav = document.querySelector('.openNav');
-        left.style.flex = '1';
-        cNav.style.display = 'block';
-        oNav.style.display = 'none';
-    }
+
 
     render() {
         return (
@@ -152,15 +139,12 @@ class Home extends Component {
                 <div className="main__container">
                     <div className="wrapper">
                         <div className="left__section">
-                            <span className="openNav" onClick={this.openNav}>&#9776;</span>
-                            <span className="closeNav" onClick={this.closeNav}>&#9776;</span>
-                            <div className="userList">
-                                <a
-                                    onClick={() => { this.groupChat('chatRoom'); }}>
-                                    Group Chat
-                                </a>
-                                <UserList usersList={this.state.users} user={this.state.name} singleChat={this.singleChat.bind(this)}/>
-                            </div>
+                            <UserList 
+                                usersList={this.state.users} 
+                                user={this.state.name} 
+                                singleChat={this.singleChat.bind(this)}
+                                groupChat={this.groupChat.bind(this)}
+                            />
                         </div>
                         <div className="right__section">
                             <div className="message__box" ref={(el) => { this.messagesContainer = el; }}>
@@ -182,7 +166,7 @@ class Home extends Component {
                                             }else{
                                                 return(
                                                     <div className="msg__text__right" key={i}>
-                                                        <img src="http://i.pravatar.cc/50" alt="avatar" />
+                                                        <img src="http://i.pravatar.cc/50?img=6" alt="avatar" />
                                                         <span>
                                                             <strong style={{ textTransform: 'capitalize', color: '#9E9E9E' }}>{message.name}</strong><br />
                                                             {message.msg}
