@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-//import { Link, Redirect } from 'react-router-dom';
 import firebase from 'firebase';
 
 
@@ -7,24 +6,35 @@ class Login extends Component{
     constructor(props){
         super(props);
         this.state = {
-            userName: null
+            error: null,
+            display: 'inline-block',
         }
     }
 
-   userLogin = (e)=>{
-    e.preventDefault();
-    let userName = this.state.userName;
-    let dbRef = firebase.database().ref('users');
-    dbRef.on('value', snap => {
-        if (snap.hasChild(userName)) {
-            this.props.history.push({
-                pathname: '/home',
-                state: { name: userName }
-            });
-        }else{
-            console.log('here');
-        }
-    })
+   loginWithGmail = (e)=>{
+        e.preventDefault();
+    
+       let provider = new firebase.auth.GoogleAuthProvider();
+       firebase.auth().signInWithPopup(provider).then((result) =>{
+           //console.log(result)
+           let additionalUserInfo = result.additionalUserInfo;
+           let user = result.user;
+           if (additionalUserInfo.isNewUser){
+                const uid = user.uid;
+                const fullName = user.displayName;
+                const userName = additionalUserInfo.profile.given_name;
+                const email = user.email;
+                const img = user.photoURL;
+                this.addUserList(uid,fullName,userName,email,img);
+               this.props.isLogin()
+           }else{
+               this.props.isLogin()
+           }
+          
+       }).catch( (error) =>{
+           var errorMessage = error.message;
+           this.setState({error:errorMessage})
+       });
     
    }
 
@@ -34,19 +44,24 @@ class Login extends Component{
 
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-6 col-md-offset-3" style={{ marginTop: '15rem', background:'#dfe9f7',borderRadius:'4px'}}>
-                            <form style={{padding:'25px 20px'}}>
-                                <div className="form-group">
-                                    <label>Email address</label>
-                                    <input 
-                                        type="text" 
-                                        onChange={(e)=>{this.setState({userName:e.target.value}) }} 
-                                        className="form-control" placeholder="Email" 
-                                    />
-                                </div>
-                                <button onClick={this.userLogin} className="btn btn-default">Enter</button>
+                        <div className="col-md-6 col-md-offset-3" style={styleDiv}>
+                            <h3>Welcome To Chat Application</h3>
+                            <br/>
+                            <button type="button" className="btn" onClick={this.loginWithGmail} style={{display:this.state.display}}>
+                                <img src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png" alt="signin-google"/>
+                            </button>
+                            <br/>
+                            <br/>
+
+                            {(this.state.error) ? 
                                 
-                            </form>
+                                <div className="alert alert-danger" role="alert">
+                                    
+                                    {this.state.error}
+                                </div>
+                            : 
+                                ''
+                            }
                         </div>
                     </div>
                 </div>
@@ -54,6 +69,14 @@ class Login extends Component{
             </div>
         )
     }
+}
+
+const styleDiv = {
+    marginTop: '15rem',
+    background: '#dfe9f7',
+    borderRadius:'4px',
+    padding: '15px',
+    textAlign: 'center'
 }
 
 

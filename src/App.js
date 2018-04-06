@@ -1,29 +1,33 @@
 import React, { Component } from 'react';
 import './App.css';
-import {
-  BrowserRouter as Router,
-  Route
-} from 'react-router-dom';
-
 
 import Home from "./component/home";
 import Login from "./component/login";
 
 
 class App extends Component {
-  
+  constructor(props){
+    super(props)
+    this.state = {
+      isLogin: false
+    }
+  }
+
+  isLogin = ()=>{
+    this.setState({isLogin:true})
+  }
+
+
+
   render() {
+    
     return (
       <div>
-        <Router>
-          <div>
-
-            <Route exact path="/" component={ Login }/>
-            <Route exact path="/home" component={ Home }/>
-            
-          </div>
-        </Router>
-      </div>
+        {(this.state.isLogin)
+          ? <Home isLogin={this.isLogin}/>
+          : <Login isLogin={this.isLogin} />
+        }
+      </div> 
     );
   }
 }

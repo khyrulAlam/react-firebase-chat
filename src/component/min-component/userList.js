@@ -4,6 +4,7 @@ import React,{ Component } from "react";
 class UserList extends Component{
     constructor(props){
         super(props);
+        //console.log(this.props.usersList)
         this.state = {
             noState: null,
         }
@@ -11,9 +12,8 @@ class UserList extends Component{
 
 
     onUser = (userName)=>{
-        let noState = this.state.noState;
-        console.log(userName, noState)
-
+        //let noState = this.state.noState;
+        //console.log(userName, noState)
     }
 
 
@@ -52,19 +52,17 @@ class UserList extends Component{
                         {
                             this.props.usersList.map(
                                 (user, i) => {
-                                    if (user.name !== this.props.user) {
+                                    if (user.uid !== this.props.uid) {
                                         return (
                                             <a 
                                                 onClick={
                                                     () => { 
-                                                        this.props.singleChat(user.name);
-                                                        this.onUser(user.name);  
+                                                        this.props.singleChat(user.uid);
                                                     }
                                                 } 
                                                 key={i}
                                             >
-
-                                                <img src="http://i.pravatar.cc/30?img=3" alt="avatar" />
+                                                <img src={user.img} alt="avatar" width="36"/>
                                                 <span>{user.name}</span>
                                             </a>
                                         )
