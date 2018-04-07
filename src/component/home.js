@@ -8,6 +8,7 @@ import moment from 'moment'
 //mini Components
 import UserList from "./min-component/userList";
 import UserImg from "./min-component/userImg";
+import { emojis } from "./min-component/emoji";
 
 
 class Home extends Component {
@@ -19,6 +20,7 @@ class Home extends Component {
             usersList: [],
             messages: [],
             text: '',
+            emoji:emojis,
             dbName: 'chatRoom',
         }
     }
@@ -144,7 +146,24 @@ class Home extends Component {
         const messagesContainer = ReactDOM.findDOMNode(this.messagesContainer);
         //console.log(messagesContainer.scrollHeight);
         messagesContainer.scroll(0, messagesContainer.scrollHeight);
-    };
+    }
+    // emoji open
+    openEmoji = ()=>{
+        let emoji = document.querySelector('.emoji');
+        (emoji.style.display === 'block')
+            ? emoji.style.display = "none"
+            : emoji.style.display = "block"
+    }
+    openEmojiClose = ()=>{
+        let emoji = document.querySelector('.emoji');
+        if(emoji.style.display === 'block'){ emoji.style.display = "none" }
+    }
+
+    pickEmoji = (emo)=>{
+        let prevText = this.state.text;
+        this.setState({text:prevText+emo})
+    }
+
 
     //Sorting by time
     srotingMessageFromTime = (a, b) => {
@@ -207,11 +226,19 @@ class Home extends Component {
                                         onChange={(e) => { this.setState({ text: e.target.value }) }}
                                         value={this.state.text}
                                         require="true"
+                                        onFocus={this.openEmojiClose}
                                     />
-                                    <button type="submit" onClick={this.pushMsg} >Send</button>
+                                    <span className="emojiIcon" onClick={this.openEmoji}> ☺ </span>
+                                    <button type="submit" onClick={this.pushMsg} > <i className="glyphicon glyphicon-send"></i> </button>
                                 </div>
                             </form>
                         </div>
+                    </div>
+                    <div className="emoji">
+                        {this.state.emoji.map(
+                            (emo, i) =>
+                                <a key={i} onClick={() => { this.pickEmoji(emo) }}> <span role="img">{emo}</span> </a>
+                        )}
                     </div>
                 </div>
 
@@ -219,7 +246,5 @@ class Home extends Component {
         )
     }
 }
-
-
 
 export default Home;

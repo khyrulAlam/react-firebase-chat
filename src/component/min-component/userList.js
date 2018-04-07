@@ -25,6 +25,9 @@ class UserList extends Component{
         left.style.flex = '0';
         cNav.style.display = 'none';
         oNav.style.display = 'block';
+        if (window.innerWidth <= 600){
+            left.style.minWidth = "0px"
+        }
     }
     openNav = () => {
         let left = document.querySelector('.left__section');
@@ -33,6 +36,9 @@ class UserList extends Component{
         left.style.flex = '1';
         cNav.style.display = 'block';
         oNav.style.display = 'none';
+        if (window.innerWidth <= 600) {
+            left.style.minWidth = "35%"
+        }
     }
 
 
@@ -40,7 +46,7 @@ class UserList extends Component{
     render(){
         return(
             <div>
-                
+
                 <span className="openNav" onClick={this.openNav}>&#9776;</span>
                 <span className="closeNav" onClick={this.closeNav}>&#9776;</span>
                 <div className="userList">
