@@ -26,8 +26,10 @@ class Login extends Component{
                 const email = user.email;
                 const img = user.photoURL;
                 this.addUserList(uid,fullName,userName,email,img);
+               localStorage.setItem('loginKey', JSON.stringify({ uid: user.uid,username: userName}));
                this.props.isLogin()
            }else{
+               localStorage.setItem('loginKey', JSON.stringify({ uid: user.uid, username: additionalUserInfo.profile.given_name }));
                this.props.isLogin()
            }
           

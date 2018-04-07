@@ -232,6 +232,18 @@ body{
 }
 
 
+/* signout */
+.signout{
+  position: absolute;
+  bottom: 7px;
+  left: 25px;
+  padding: 5px 16px;
+  border: 0px;
+  background: #E91E63;
+  color: #fff;
+  border-radius: 3px;
+}
+
 
 /* Spinner */
 .spinner {
@@ -265,15 +277,20 @@ body{
     width: 100%;
     height: 100vh;
   }
+  .wrapper{
+    display: flex;
+    flex-wrap: nowrap;
+  }
   .left__section{
     height: 100vh;
-    min-width: 35%;
+    min-width: 40%;
     -webkit-transition: 0.4s all;
     -o-transition: 0.4s all;
     transition: 0.4s all;
   }
   .right__section{
     height: 100vh;
+    min-width: 60%;
   }
   .openNav{
     margin-right: -10px;

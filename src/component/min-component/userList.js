@@ -4,7 +4,7 @@ import React,{ Component } from "react";
 class UserList extends Component{
     constructor(props){
         super(props);
-        //console.log(this.props.usersList)
+        //console.log(this.props)
         this.state = {
             noState: null,
         }
@@ -20,6 +20,7 @@ class UserList extends Component{
     //Navigation Open close method
     closeNav = () => {
         let left = document.querySelector('.left__section');
+        let rightsection = document.querySelector('.right__section');
         let cNav = document.querySelector('.closeNav');
         let oNav = document.querySelector('.openNav');
         left.style.flex = '0';
@@ -27,21 +28,27 @@ class UserList extends Component{
         oNav.style.display = 'block';
         if (window.innerWidth <= 600){
             left.style.minWidth = "0px"
+            rightsection.style.minWidth = "99%";
         }
     }
     openNav = () => {
         let left = document.querySelector('.left__section');
+        let rightsection = document.querySelector('.right__section');
         let cNav = document.querySelector('.closeNav');
         let oNav = document.querySelector('.openNav');
         left.style.flex = '1';
         cNav.style.display = 'block';
         oNav.style.display = 'none';
         if (window.innerWidth <= 600) {
-            left.style.minWidth = "35%"
+            left.style.minWidth = "40%";
+            rightsection.style.minWidth = "59%";
         }
     }
 
-
+    signout = ()=>{
+        localStorage.setItem('loginKey', []);
+        this.props.logout()
+    }
 
     render(){
         return(
@@ -83,6 +90,8 @@ class UserList extends Component{
 
                     </div>
                 </div>
+
+                <button className="signout" onClick={this.signout}> Signout </button>
 
             </div>
         )

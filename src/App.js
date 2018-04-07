@@ -9,12 +9,22 @@ class App extends Component {
   constructor(props){
     super(props)
     this.state = {
-      isLogin: true
+      isLogin: false
+    }
+  }
+
+  componentWillMount(){
+    const cachedHits = localStorage.getItem('loginKey');
+    if(cachedHits){
+      this.setState({isLogin:true})
     }
   }
 
   isLogin = ()=>{
     this.setState({isLogin:true})
+  }
+  isLogout= () =>{
+    this.setState({isLogin:false})
   }
 
 
@@ -24,7 +34,7 @@ class App extends Component {
     return (
       <div>
         {(this.state.isLogin)
-          ? <Home isLogin={this.isLogin}/>
+          ? <Home isLogout={this.isLogout}/>
           : <Login isLogin={this.isLogin} />
         }
       </div> 

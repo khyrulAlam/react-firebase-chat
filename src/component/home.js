@@ -27,13 +27,17 @@ class Home extends Component {
 
     //React Hook
     componentWillMount() {
-        // loginUserInfo
-        var user = firebase.auth().currentUser;
-        if (user) {
-            let uid = user.uid;
-            let username = (user.displayName).split(' ')[0];
+        const cachedHits = localStorage.getItem('loginKey');
+        if(cachedHits){
+            let cc = JSON.parse(cachedHits);
+            let uid = cc.uid;
+            let username = cc.username;
             this.setState({uid:uid,name:username})
+        }else{
+            localStorage.setItem('loginKey', []);
+            this.props.isLogout()
         }
+
         //End LoginInfo
 
 
@@ -183,6 +187,7 @@ class Home extends Component {
                                 uid={this.state.uid}
                                 singleChat={this.singleChat.bind(this)}
                                 groupChat={this.groupChat.bind(this)}
+                                logout={this.props.isLogout}
                             />
                         </div>
                         <div className="right__section">
