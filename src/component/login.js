@@ -37,8 +37,16 @@ class Login extends Component{
            var errorMessage = error.message;
            this.setState({error:errorMessage})
        });
-    
    }
+    addUserList = (uid, fullName, userName, email, img)=>{
+        const rootRef = firebase.database().ref().child('usersTable').child(uid);
+        rootRef.set({
+            userName: userName,
+            profile_picture: img,
+            fullName: fullName,
+            email: email
+        });
+    }
 
     render(){
         return(
