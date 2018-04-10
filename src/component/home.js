@@ -9,6 +9,7 @@ import moment from 'moment'
 import UserList from "./min-component/userList";
 import UserImg from "./min-component/userImg";
 import { emojis } from "./min-component/emoji";
+import { isNull } from 'util';
 
 
 class Home extends Component {
@@ -133,14 +134,34 @@ class Home extends Component {
         let name = this.state.name;
         let text = this.state.text;
         let dbName = this.state.dbName;
-        const rootRef = firebase.database().ref().child(dbName);
-        rootRef.push().set({ 
-            uid:uid,
-            time: Date.now(), 
-            name: name, 
-            text: text 
-        });
-        this.setState({ text: '' });
+
+        //notification
+        if (dbName !== 'chatRoom'){
+            let uidArr = dbName.split('+');
+            const notification = firebase.database().ref().child('notification').child(uidArr[1]);
+            notification.child(uid).once('value',snapshot =>{
+                if (!isNull(snapshot.val())) {
+                    notification.child(uid).set({
+                        count: snapshot.val().count +1
+                    })
+                }else{
+                    notification.child(uid).set({
+                        count: 1
+                    })
+                }    
+            })
+        }
+        
+
+
+        // const rootRef = firebase.database().ref().child(dbName);
+        // rootRef.push().set({ 
+        //     uid:uid,
+        //     time: Date.now(), 
+        //     name: name, 
+        //     text: text 
+        // });
+        // this.setState({ text: '' });
         //console.log('message send');
 
     }

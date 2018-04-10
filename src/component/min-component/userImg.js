@@ -29,7 +29,7 @@ class UserImg extends Component{
                 {this.state.userList.map(
                     (ul,i) => 
                     (ul.uid === this.state.uid)
-                    ? <img src={ul.img} alt={ul.uid} key={i}/>
+                    ? <img src={ul.img} alt="avatar" key={i}/>
                     : ''
                 )}       
             </div>

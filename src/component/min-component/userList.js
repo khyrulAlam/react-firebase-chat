@@ -1,4 +1,5 @@
-import React,{ Component } from "react";
+import React, { Component } from "react";
+import Notify from "../min-component/notify";
 
 
 class UserList extends Component{
@@ -8,12 +9,6 @@ class UserList extends Component{
         this.state = {
             noState: null,
         }
-    }
-
-
-    onUser = (userName)=>{
-        //let noState = this.state.noState;
-        //console.log(userName, noState)
     }
 
 
@@ -75,6 +70,7 @@ class UserList extends Component{
                                                 } 
                                                 key={i}
                                             >
+                                                <Notify uid={this.props.uid} person={user.uid}/>
                                                 <img src={user.img} alt="avatar" width="36"/>
                                                 <span>{user.name}</span>
                                             </a>
