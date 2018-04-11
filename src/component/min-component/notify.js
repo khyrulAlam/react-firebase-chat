@@ -8,6 +8,7 @@ class Notify extends Component{
         //console.log(this.props.person)
         this.state = {
             uid: this.props.uid,
+            personId:this.props.person,
             notify: []
         }
     }
@@ -18,8 +19,9 @@ class Notify extends Component{
         rootRef.on('child_added', snap => {
             notify.push({
                 key: snap.key,
-                count: snap.val()
+                count: snap.val().count
             })
+            //console.log(snap.numChildren())
             this.setState({ notify: notify });
         });
         //console.log(this.state.notify)
@@ -30,7 +32,11 @@ class Notify extends Component{
         return(
             <span>
                 {this.state.notify.map(
-                    (noti,i)=> <span key={i}> 9 </span>
+                    (noti,i)=> { 
+                        if(this.state.personId === noti.key && noti.count>0){ 
+                            return <span key={i} className="notify"> {noti.count} </span> 
+                        }
+                    }
                 )}
             </span>
         )

@@ -138,6 +138,7 @@ body{
   padding: 8px 0px;
   font-family: 'Itim', cursive;
   cursor: pointer;
+  position: relative;
 }
 .userList img{
   border-radius: 50%;
@@ -149,6 +150,19 @@ body{
   padding-top: 10px;
   float: left;
   color: #e91e63bd;
+}
+.userList .notify{
+  position: absolute;
+  border: 0px solid;
+  background: #ea4763de;
+  color: #ffffff;
+  width: 20px;
+  height: 20px;
+  padding: 0px;
+  text-align: center;
+  border-radius: 50%;
+  left: 0px;
+  top: 0px;
 }
 .message__box{
   height: 80vh;
