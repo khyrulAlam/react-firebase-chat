@@ -192,6 +192,7 @@ body{
   font-family: 'Dosis', sans-serif;
   box-shadow: 0px -4px 41px -12px rgba(0, 0, 0, 0.39);
   min-width: 185px;
+  word-break: break-all;
 }
 .msg__text__right{
   display: flex;

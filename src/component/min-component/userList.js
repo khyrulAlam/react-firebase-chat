@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as firebase from 'firebase';
 import Notify from "../min-component/notify";
 
 
@@ -40,6 +41,16 @@ class UserList extends Component{
         }
     }
 
+    removeNotify = (user)=>{
+        const notification = firebase.database()
+                            .ref('notification')
+                            .child(this.props.uid)
+                            .child(user);
+        notification.set({
+            count: 0
+        })
+    }
+
     signout = ()=>{
         localStorage.setItem('loginKey', []);
         this.props.logout()
@@ -66,6 +77,7 @@ class UserList extends Component{
                                                 onClick={
                                                     () => { 
                                                         this.props.singleChat(user.uid);
+                                                        this.removeNotify(user.uid);
                                                     }
                                                 } 
                                                 key={i}

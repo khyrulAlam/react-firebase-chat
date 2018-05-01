@@ -9,37 +9,35 @@ class Notify extends Component{
         this.state = {
             uid: this.props.uid,
             personId:this.props.person,
-            notify: []
+            notify: null
         }
     }
 
     componentWillMount() {
-        let notify = this.state.notify;
-        const rootRef = firebase.database().ref('notification').child(this.state.uid);
-        rootRef.on('child_added', snap => {
-            notify.push({
-                key: snap.key,
-                count: snap.val().count
-            })
-            //console.log(snap.numChildren())
-            this.setState({ notify: notify });
+        const rootRef = firebase.database()
+        .ref().child('notification')
+        .child(this.state.uid)
+        .child(this.state.personId)
+        .child('count');
+
+        rootRef.on('value', snap => {
+            this.setState({ notify: snap.val() });
         });
-        //console.log(this.state.notify)
     }
 
 
     render(){
-        return(
-            <span>
-                {this.state.notify.map(
-                    (noti,i)=> { 
-                        if(this.state.personId === noti.key && noti.count>0){ 
-                            return <span key={i} className="notify"> {noti.count} </span> 
-                        }
-                    }
-                )}
-            </span>
-        )
+        if(this.state.notify>0){
+            return (
+                <span className="notify">
+                    {this.state.notify}
+                </span>
+            )
+        }else{
+            return(
+                <span></span>
+            )
+        }
     }
 }
 
