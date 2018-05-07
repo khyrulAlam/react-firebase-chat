@@ -143,9 +143,15 @@ class Home extends Component {
                 const removeNotification = firebase.database().ref('notification').child(uid).child(uidArr[1]);
                 const notification = firebase.database().ref().child('notification').child(uidArr[1]);
                 notification.child(uid).once('value', snapshot => {
+                    if(snapshot.val()){
                         notification.child(uid).set({
                             count: snapshot.val().count + 1
                         })
+                    }else{
+                        notification.child(uid).set({
+                            count: 1
+                        })
+                    }
                 })
                 removeNotification.set({
                     count:0
