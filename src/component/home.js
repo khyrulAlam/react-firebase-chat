@@ -35,7 +35,8 @@ class Home extends Component {
             this.setState({uid:uid,name:username})
         }else{
             localStorage.setItem('loginKey', []);
-            this.props.isLogout()
+            // this.props.isLogout()
+            
         }
 
         //End LoginInfo
