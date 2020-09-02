@@ -6,8 +6,6 @@ class Home2 extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            userName: "Khayrul alam",
-            UserId: "ASD049485",
             usersList: [],
             userLoading: false,
         }
