@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import firebase from "firebase";
+import { auth, database } from "firebase";
 
 class Login extends Component {
   constructor(props) {
@@ -13,9 +13,8 @@ class Login extends Component {
   loginWithGmail = e => {
     e.preventDefault();
 
-    let provider = new firebase.auth.GoogleAuthProvider();
-    firebase
-      .auth()
+    let provider = new auth.GoogleAuthProvider();
+    auth()
       .signInWithPopup(provider)
       .then(result => {
         let additionalUserInfo = result.additionalUserInfo;
@@ -30,8 +29,7 @@ class Login extends Component {
           );
           this.props.isLogin();
         } else {
-          let userRef = firebase
-            .database()
+          let userRef = database()
             .ref()
             .child("usersTable")
             .child(result.user.uid);
@@ -59,8 +57,7 @@ class Login extends Component {
       });
   };
   addUserList = result => {
-    const rootRef = firebase
-      .database()
+    const rootRef = database()
       .ref()
       .child("usersTable")
       .child(result.user.uid);
@@ -99,8 +96,8 @@ class Login extends Component {
                   {this.state.error}
                 </div>
               ) : (
-                ""
-              )}
+                  ""
+                )}
             </div>
           </div>
         </div>
