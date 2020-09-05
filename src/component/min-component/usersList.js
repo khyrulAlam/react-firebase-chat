@@ -5,10 +5,21 @@ class UsersList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentUser: ""
+            currentUser: "",
+            activeItem: "chatRoom"
         }
     }
 
+    selectUser = (user) => {
+        console.log(user)
+        if (user === "chatRoom") {
+            this.props.getMessageFromRoom(user)
+            this.setState({ activeItem: user });
+        } else {
+            this.props.selectUser(user)
+            this.setState({ activeItem: user.uid })
+        }
+    }
 
     render() {
         return (
@@ -37,11 +48,11 @@ class UsersList extends Component {
                             </div>
                             :
                             <React.Fragment>
-                                <ListItem p={1} onClick={() => this.props.selectUser("chatRoom")}>
+                                <ListItem p={1} onClick={() => this.selectUser("chatRoom")}>
                                     <Tag
                                         w="100%"
                                         shadow="md"
-                                        variantColor="red"
+                                        variantColor={this.state.activeItem === "chatRoom" ? "red" : "orange"}
                                         roundedRight="md"
                                         roundedLeft="full"
                                         cursor="pointer"
@@ -57,11 +68,11 @@ class UsersList extends Component {
                                 {this.props.usersList.map(user => {
                                     return (user.uid !== this.props.userId)
                                         ?
-                                        <ListItem p={1} key={user.uid} onClick={() => this.props.selectUser(user)}>
+                                        <ListItem p={1} key={user.uid} onClick={() => this.selectUser(user)}>
                                             <Tag
                                                 w="100%"
                                                 shadow="md"
-                                                variantColor="orange"
+                                                variantColor={this.state.activeItem === user.uid ? "red" : "orange"}
                                                 roundedRight="md"
                                                 roundedLeft="full"
                                                 cursor="pointer"

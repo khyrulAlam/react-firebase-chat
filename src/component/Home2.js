@@ -13,7 +13,8 @@ class Home2 extends Component {
             userName: "",
             usersList: [],
             roomName: "chatRoom",
-            messages: []
+            messages: [],
+            loadingData: true
         }
     }
 
@@ -49,6 +50,7 @@ class Home2 extends Component {
     }
 
     getMessageFromRoom = async (roomName) => {
+        this.setState({ loadingData: true })
         let rootRef = await database().ref(roomName);
         await rootRef.once('value', snapshot => {
             let messages = [];
@@ -60,11 +62,12 @@ class Home2 extends Component {
                     msg: snap.val().text
                 });
             });
-            this.setState({ messages });
+            this.setState({ messages, loadingData: false, roomName: "chatRoom" });
         });
     }
 
     selectUser = async (user) => {
+        this.setState({ loadingData: true })
         let messages = [];
         let senderDb = `${this.state.userId}+${user.uid}`;
         let receiverDb = `${user.uid}+${this.state.userId}`;
@@ -92,7 +95,7 @@ class Home2 extends Component {
             })
             this.setState({ messages })
         })
-        this.setState({ roomName: senderDb });
+        this.setState({ roomName: senderDb, loadingData: false });
         await this.subscribeRoom(senderDb);
         await this.subscribeRoom(receiverDb);
     }
@@ -124,12 +127,14 @@ class Home2 extends Component {
                                     userId={this.state.userId}
                                     usersList={this.state.usersList}
                                     selectUser={this.selectUser}
+                                    getMessageFromRoom={this.getMessageFromRoom}
                                 />
                                 <Message
                                     userId={this.state.userId}
                                     userName={this.state.userName}
                                     usersList={this.state.usersList}
                                     roomName={this.state.roomName}
+                                    loadingData={this.state.loadingData}
                                     messages={this.state.messages}
                                 />
                             </Flex>

@@ -33,7 +33,7 @@ class Message extends Component {
                     <Flex h="100%" position="relative">
                         <Flex flexDirection="column" p={2} w="100%" overflowY="auto" marginBottom="50px" ref={(el) => { this.messagesContainer = el; }} style={{ scrollBehavior: "smooth" }}>
                             {
-                                this.props.messages.length > 0
+                                !this.props.loadingData
                                     ?
                                     this.props.messages.sort((a, b) => new Date(a.time) - new Date(b.time)).map((conversation, i) => (
                                         conversation.uid === this.props.userId
@@ -106,7 +106,7 @@ class Message extends Component {
                                     </div>
                             }
                         </Flex>
-                        {this.props.messages.length > 0
+                        {!this.props.loadingData
                             ? <InputBox
                                 userName={this.props.userName}
                                 userId={this.props.userId}
