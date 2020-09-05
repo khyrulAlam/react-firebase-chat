@@ -12,7 +12,7 @@ class Header extends Component {
     render() {
         return (
             <React.Fragment>
-                <Flex align="center" justifyContent="center" shadow="lg" bg="white">
+                <Flex borderBottom="1px solid gray" bg="white" roundedTop="md">
                     <Box w="100%" p={4}>
                         <Stack isInline>
                             <Image

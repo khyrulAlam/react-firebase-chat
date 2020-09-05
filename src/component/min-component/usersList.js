@@ -9,20 +9,17 @@ class UsersList extends Component {
         }
     }
 
-    selectUser(user) {
-        console.log(user)
-    }
 
     render() {
         return (
             <React.Fragment>
                 <Box
-                    w="25%"
+                    w="30%"
                     h="80vh"
                     p={1}
                     shadow="lg"
                     overflowY="auto"
-                    roundedLeft="md"
+                    roundedBottomLeft="md"
                     bg="white"
                 >
                     <List spacing={0}>
@@ -40,11 +37,11 @@ class UsersList extends Component {
                             </div>
                             :
                             <React.Fragment>
-                                <ListItem p={1} onClick={() => this.selectUser("group")}>
+                                <ListItem p={1} onClick={() => this.props.selectUser("chatRoom")}>
                                     <Tag
                                         w="100%"
                                         shadow="md"
-                                        variantColor="orange"
+                                        variantColor="red"
                                         roundedRight="md"
                                         roundedLeft="full"
                                         cursor="pointer"
@@ -57,27 +54,30 @@ class UsersList extends Component {
                                         <TagLabel>Common Group</TagLabel>
                                     </Tag>
                                 </ListItem>
-                                {this.props.usersList.map(user => (
-                                    <ListItem p={1} key={user.uid} onClick={() => this.selectUser(user)}>
-                                        <Tag
-                                            w="100%"
-                                            shadow="md"
-                                            variantColor="orange"
-                                            roundedRight="md"
-                                            roundedLeft="full"
-                                            cursor="pointer"
-                                        >
-                                            <Avatar
-                                                src={user.img}
-                                                size="md"
-                                                name={user.name}
-                                                ml={-2}
-                                                mr={2}
-                                            />
-                                            <TagLabel>{user.name}</TagLabel>
-                                        </Tag>
-                                    </ListItem>
-                                ))}
+                                {this.props.usersList.map(user => {
+                                    return (user.uid !== this.props.userId)
+                                        ?
+                                        <ListItem p={1} key={user.uid} onClick={() => this.props.selectUser(user)}>
+                                            <Tag
+                                                w="100%"
+                                                shadow="md"
+                                                variantColor="orange"
+                                                roundedRight="md"
+                                                roundedLeft="full"
+                                                cursor="pointer"
+                                            >
+                                                <Avatar
+                                                    src={user.img}
+                                                    size="md"
+                                                    name={user.name}
+                                                    ml={-2}
+                                                    mr={2}
+                                                />
+                                                <TagLabel>{user.name}</TagLabel>
+                                            </Tag>
+                                        </ListItem>
+                                        : ""
+                                })}
                             </React.Fragment>
                         }
                     </List>

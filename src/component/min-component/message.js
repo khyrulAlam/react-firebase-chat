@@ -2,31 +2,13 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import moment from 'moment'
 import { Box, Flex, Avatar, Tag, TagLabel, Text, Stack, Skeleton } from "@chakra-ui/core"
-import { database } from "firebase";
 import InputBox from "./inputBox";
 
 
 class Message extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            messages: []
-        }
-    }
-
-    async UNSAFE_componentWillMount() {
-        //Group Chat Conversation fetch
-        let messages = this.state.messages;
-        const rootRef = await database().ref().child("chatRoom");
-        await rootRef.on('child_added', snap => {
-            messages.push({
-                uid: snap.val().uid,
-                time: snap.val().time,
-                name: snap.val().name,
-                msg: snap.val().text
-            });
-            this.setState({ messages });
-        });
+        this.state = {}
     }
 
     componentDidUpdate() {
@@ -42,18 +24,18 @@ class Message extends Component {
         return (
             <React.Fragment>
                 <Box
-                    w="45%"
+                    w="70%"
                     h="80vh"
                     shadow="lg"
-                    roundedRight="md"
+                    roundedBottomRight="md"
                     bg="gray.200"
                 >
                     <Flex h="100%" position="relative">
                         <Flex flexDirection="column" p={2} w="100%" overflowY="auto" marginBottom="50px" ref={(el) => { this.messagesContainer = el; }} style={{ scrollBehavior: "smooth" }}>
                             {
-                                this.state.messages.length > 0
+                                this.props.messages.length > 0
                                     ?
-                                    this.state.messages.sort((a, b) => a.time > b.time).map((conversation, i) => (
+                                    this.props.messages.sort((a, b) => new Date(a.time) - new Date(b.time)).map((conversation, i) => (
                                         conversation.uid === this.props.userId
                                             ?
                                             <Stack spacing={1} isInline marginBottom={2} key={i}>
@@ -124,7 +106,14 @@ class Message extends Component {
                                     </div>
                             }
                         </Flex>
-                        {this.state.messages.length > 0 ? <InputBox /> : ""}
+                        {this.props.messages.length > 0
+                            ? <InputBox
+                                userName={this.props.userName}
+                                userId={this.props.userId}
+                                roomName={this.props.roomName}
+                            />
+                            : ""
+                        }
                     </Flex>
                 </Box>
             </React.Fragment>
