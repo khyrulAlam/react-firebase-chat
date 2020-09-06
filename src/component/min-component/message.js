@@ -51,7 +51,7 @@ class Message extends Component {
                                                         :
                                                         ''
                                                 )}
-                                                <Tag variantColor="purple" shadow="sm">
+                                                <Tag variantColor="cyan" shadow="sm">
                                                     <TagLabel whiteSpace="normal" py={2}>
                                                         <Stack>
                                                             <Text>{conversation.msg}</Text>
@@ -78,7 +78,7 @@ class Message extends Component {
                                                         :
                                                         ''
                                                 )}
-                                                <Tag variantColor="cyan" shadow="sm">
+                                                <Tag variantColor="purple" shadow="sm">
                                                     <TagLabel whiteSpace="normal" py={2} >
                                                         <Stack>
                                                             <Text>

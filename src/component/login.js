@@ -1,117 +1,110 @@
 import React, { Component } from "react";
 import { auth, database } from "firebase";
+import { Flex, Box, Button, Image, Text, Alert, AlertIcon } from "@chakra-ui/core";
+
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      error: null,
-      display: "inline-block"
-    };
+      error: false,
+      errorMessage: ""
+    }
   }
-
   loginWithGmail = e => {
     e.preventDefault();
-
     let provider = new auth.GoogleAuthProvider();
     auth()
       .signInWithPopup(provider)
       .then(result => {
         let additionalUserInfo = result.additionalUserInfo;
+        let user = {
+          userName: result.additionalUserInfo.profile.given_name,
+          profile_picture: result.user.photoURL,
+          fullName: result.user.displayName,
+          email: result.user.email,
+          uid: result.user.uid
+        }
         if (additionalUserInfo.isNewUser) {
           this.addUserList(result);
-          localStorage.setItem(
-            "loginKey",
-            JSON.stringify({
-              uid: result.user.uid,
-              username: additionalUserInfo.profile.given_name
-            })
-          );
-          this.props.isLogin();
+          this.props.isLogin(user);
         } else {
-          let userRef = database()
-            .ref()
-            .child("usersTable")
-            .child(result.user.uid);
+          let userRef = database().ref().child("usersTable").child(result.user.uid);
           userRef.once("value", snapshot => {
             var isAvailable = snapshot.val();
             if (!isAvailable) {
               this.addUserList(result);
             } else {
-              userRef.update({ profile_picture: result.user.photoURL });
+              userRef.update({ profile_picture: result.user.photoURL, uid: result.user.uid });
             }
           });
-          localStorage.setItem(
-            "loginKey",
-            JSON.stringify({
-              uid: result.user.uid,
-              username: additionalUserInfo.profile.given_name
-            })
-          );
-          this.props.isLogin();
+          this.props.isLogin(user);
         }
       })
       .catch(error => {
         var errorMessage = error.message;
-        this.setState({ error: errorMessage });
+        this.setState({ error: true, errorMessage })
       });
   };
+
   addUserList = result => {
-    const rootRef = database()
+    database()
       .ref()
       .child("usersTable")
-      .child(result.user.uid);
-    rootRef.set({
-      userName: result.additionalUserInfo.profile.given_name,
-      profile_picture: result.user.photoURL,
-      fullName: result.user.displayName,
-      email: result.user.email
-    });
+      .child(result.user.uid)
+      .set({
+        userName: result.additionalUserInfo.profile.given_name,
+        profile_picture: result.user.photoURL,
+        fullName: result.user.displayName,
+        email: result.user.email,
+        uid: result.user.uid
+      });
   };
 
   render() {
     return (
-      <div>
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6 col-md-offset-3" style={styleDiv}>
-              <h3>Welcome To Chat Application</h3>
-              <br />
-              <button
-                type="button"
-                className="btn"
-                onClick={this.loginWithGmail}
-                style={{ display: this.state.display }}
-              >
-                <img
-                  src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"
-                  alt="signin-google"
-                />
-              </button>
-              <br />
-              <br />
-
-              {this.state.error ? (
-                <div className="alert alert-danger" role="alert">
-                  {this.state.error}
-                </div>
-              ) : (
-                  ""
-                )}
-            </div>
-          </div>
-        </div>
-      </div>
+      <React.Fragment>
+        <Flex bg="gray.200" flexDirection="column" justifyContent="center" alignItems="center" textAlign="center" h="100vh">
+          <Alert
+            status="error"
+            marginBottom={10}
+            style={{ display: this.state.error ? "block" : "none" }}
+          >
+            <AlertIcon />
+            {this.state.errorMessage}
+          </Alert>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            bg="white"
+            padding="50px"
+            shadow="md"
+            rounded="md"
+          >
+            <Image
+              src="/cat.png"
+              alt="logo"
+            />
+            <Text marginTop={2} fontWeight={600} fontSize="2.5rem" color="orange.300">
+              Cat Chat
+            </Text>
+            <Button
+              onClick={this.loginWithGmail}
+              variantColor="teal"
+              size="lg"
+              marginTop={5}
+            >
+              <Image
+                src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"
+                alt="signin-google"
+              />
+            </Button>
+          </Box>
+        </Flex>
+      </React.Fragment >
     );
   }
 }
-
-const styleDiv = {
-  marginTop: "15rem",
-  background: "#dfe9f7",
-  borderRadius: "4px",
-  padding: "15px",
-  textAlign: "center"
-};
-
 export default Login;

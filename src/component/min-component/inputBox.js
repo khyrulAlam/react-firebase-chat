@@ -22,8 +22,6 @@ class InputBox extends Component {
     sendMessage = (event) => {
         event.preventDefault();
         if (this.state.text.trim() !== "") {
-            // console.log(this.state.text);
-            // console.log(this.props);
             database().ref(this.props.roomName).push().set({
                 uid: this.props.userId,
                 time: Date.now(),

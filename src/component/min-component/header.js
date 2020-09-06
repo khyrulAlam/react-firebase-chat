@@ -28,10 +28,14 @@ class Header extends Component {
                     <Box w="100%" p={4} display="flex" flexDirection="row-reverse">
                         <Menu>
                             <MenuButton as={Button} rightIcon="chevron-down" paddingLeft=".5rem">
-                                <Avatar size="sm" marginRight="5px"></Avatar>
-                                {this.props.userName}
+                                <Avatar
+                                    size="sm"
+                                    marginRight="5px"
+                                    src={this.props.profile_picture}
+                                />
+                                {this.props.fullName}
                             </MenuButton>
-                            <MenuList>
+                            <MenuList onClick={this.props.logout}>
                                 <MenuItem>Logout</MenuItem>
                             </MenuList>
                         </Menu>

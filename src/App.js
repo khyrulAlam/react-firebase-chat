@@ -1,52 +1,70 @@
 import React, { Component } from 'react';
-// import './App.css';
 import { ThemeProvider, CSSReset } from "@chakra-ui/core";
 import CustomTheme from "./theme";
-
-// import Home from "./component/home";
-// import Login from "./component/login";
-import Home2 from "./component/Home2";
-
+import Login from "./component/login";
+import Home from "./component/Home";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 
 class App extends Component {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
     this.state = {
-      isLogin: false
+      authenticated: false,
+      user: null
     }
   }
-
   UNSAFE_componentWillMount() {
-    const cachedHits = localStorage.getItem('loginKey');
-    if (cachedHits) {
-      this.setState({ isLogin: true })
+    let user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      this.setState({ authenticated: true, user })
     }
   }
-
-  isLogin = () => {
-    this.setState({ isLogin: true })
+  isLogin = (user) => {
+    localStorage.setItem("user", JSON.stringify(user));
+    this.setState({ authenticated: true, user })
   }
   isLogout = () => {
-    this.setState({ isLogin: false })
+    localStorage.removeItem("user")
+    this.setState({ authenticated: false, user: null })
   }
 
-
-
   render() {
-
     return (
-      <div>
-        {/* {(this.state.isLogin)
-          ? <Home2 isLogout={this.isLogout} />
-          : <Login isLogin={this.isLogin} />
-        } */}
-        <ThemeProvider theme={CustomTheme}>
-          <CSSReset />
-          <Home2 />
-        </ThemeProvider>
-      </div>
+      <ThemeProvider theme={CustomTheme}>
+        <CSSReset />
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              {this.state.authenticated === true
+                ? <Redirect to='/chat' />
+                : <Login isLogin={this.isLogin} />
+              }
+            </Route>
+            <PrivateRoute
+              path="/chat"
+              authenticated={this.state.authenticated}
+              component={() => <Home user={this.state.user} logout={this.isLogout} />}
+            />
+          </Switch>
+        </Router>
+      </ThemeProvider>
     );
   }
 }
 
+function PrivateRoute({ component: Component, authenticated, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={(props) => authenticated === true
+        ? <Component {...props} />
+        : <Redirect to={{ pathname: '/', state: { from: props.location } }} />}
+    />
+  )
+}
 export default App;

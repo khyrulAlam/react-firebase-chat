@@ -5,10 +5,11 @@ import Header from "./min-component/header";
 import UsersList from "./min-component/usersList";
 import { database } from "firebase";
 
-class Home2 extends Component {
+class Home extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            user: null,
             userId: "",
             userName: "",
             usersList: [],
@@ -19,35 +20,30 @@ class Home2 extends Component {
         }
     }
 
-    async UNSAFE_componentWillMount() {
-        const cachedHits = localStorage.getItem('loginKey');
-        if (cachedHits) {
-            let cc = JSON.parse(cachedHits);
-            let userId = cc.uid;
-            let userName = cc.username;
-            this.setState({ userId, userName })
-        } else {
-            localStorage.setItem('loginKey', []);
-            // this.props.isLogout()
-
-        }
-        if (this.state.usersList.length < 1) { await this.setUsersList() }
-        await this.getMessageFromRoom(this.state.roomName);
+    UNSAFE_componentWillMount() {
+        this.setState({
+            user: this.props.user,
+            userId: this.props.user.uid,
+            userName: this.props.user.userName
+        });
+        if (this.state.usersList.length < 1) { this.setUsersList() }
+        this.getMessageFromRoom(this.state.roomName);
     }
 
     setUsersList = async (users) => {
-        let userRef = await database().ref("usersTable")
-        await userRef.on('value', snapshot => {
-            let usersList = [];
-            snapshot.forEach(snap => {
-                usersList.push({
-                    uid: snap.key,
-                    name: snap.val().userName,
-                    img: snap.val().profile_picture
+        await database()
+            .ref("usersTable")
+            .on('value', snapshot => {
+                let usersList = [];
+                snapshot.forEach(snap => {
+                    usersList.push({
+                        uid: snap.key,
+                        name: snap.val().userName,
+                        img: snap.val().profile_picture
+                    })
                 })
-            })
-            this.setState({ usersList })
-        });
+                this.setState({ usersList })
+            });
     }
 
     getMessageFromRoom = async (roomName) => {
@@ -118,7 +114,6 @@ class Home2 extends Component {
     subscribeRoom = async (roomName) => {
         await database().ref().child(roomName).limitToLast(1).on("child_added", snap => {
             if (this.state.messages.filter(msg => msg.key === snap.key).length === 0) {
-                console.log(roomName, snap.val())
                 let newMsg = {
                     uid: snap.val().uid,
                     time: snap.val().time,
@@ -132,7 +127,6 @@ class Home2 extends Component {
     }
 
     unsubscribeRoom = async (roomName) => {
-        console.log("off", roomName)
         await database().ref(roomName).off();
     }
 
@@ -141,8 +135,21 @@ class Home2 extends Component {
             < React.Fragment >
                 <Box h="100vh" bg="gray.100">
                     <Flex justifyContent="center">
-                        <Flex w="65%" flexDirection="column" p={6}>
-                            <Header userName={this.state.userName} />
+                        <Flex
+                            width={[
+                                "100%",
+                                "100%",
+                                "100%",
+                                "65%"
+                            ]}
+                            flexDirection="column"
+                            p={[0, 0, 0, 6]}
+                        >
+                            <Header
+                                fullName={this.state.user.fullName}
+                                profile_picture={this.state.user.profile_picture}
+                                logout={this.props.logout}
+                            />
                             <Flex align="center" justifyContent="center">
                                 <UsersList
                                     userId={this.state.userId}
@@ -168,4 +175,4 @@ class Home2 extends Component {
     }
 }
 
-export default Home2;
+export default Home;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Box, List, ListItem, Avatar, Tag, TagLabel, Skeleton } from "@chakra-ui/core"
+import { Box, List, ListItem, Avatar, Tag, TagLabel, Skeleton, Spinner } from "@chakra-ui/core"
 
 class UsersList extends Component {
     constructor(props) {
@@ -11,7 +11,8 @@ class UsersList extends Component {
     }
 
     selectUser = (user) => {
-        console.log(user)
+        // console.log(user)
+        if (this.props.loadingData) { return }
         if (user === "chatRoom") {
             this.props.getMessageFromRoom(user)
             this.setState({ activeItem: user });
@@ -56,6 +57,7 @@ class UsersList extends Component {
                                         roundedRight="md"
                                         roundedLeft="full"
                                         cursor="pointer"
+                                        position="relative"
                                     >
                                         <Avatar
                                             size="md"
@@ -63,6 +65,11 @@ class UsersList extends Component {
                                             mr={2}
                                         />
                                         <TagLabel>Common Group</TagLabel>
+                                        <Spinner
+                                            position="absolute"
+                                            right="0"
+                                            style={{ display: this.props.loadingData && this.state.activeItem === "chatRoom" ? "block" : "none" }}
+                                        />
                                     </Tag>
                                 </ListItem>
                                 {this.props.usersList.map(user => {
@@ -76,6 +83,7 @@ class UsersList extends Component {
                                                 roundedRight="md"
                                                 roundedLeft="full"
                                                 cursor="pointer"
+                                                position="relative"
                                             >
                                                 <Avatar
                                                     src={user.img}
@@ -85,6 +93,11 @@ class UsersList extends Component {
                                                     mr={2}
                                                 />
                                                 <TagLabel>{user.name}</TagLabel>
+                                                <Spinner
+                                                    position="absolute"
+                                                    right="0"
+                                                    style={{ display: this.props.loadingData && this.state.activeItem === user.uid ? "block" : "none" }}
+                                                />
                                             </Tag>
                                         </ListItem>
                                         : ""
