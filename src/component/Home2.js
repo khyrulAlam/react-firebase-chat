@@ -13,6 +13,7 @@ class Home2 extends Component {
             userName: "",
             usersList: [],
             roomName: "chatRoom",
+            receiverDb: "",
             messages: [],
             loadingData: true
         }
@@ -59,11 +60,18 @@ class Home2 extends Component {
                     uid: snap.val().uid,
                     time: snap.val().time,
                     name: snap.val().name,
-                    msg: snap.val().text
+                    msg: snap.val().text,
+                    key: snap.key
                 });
             });
-            this.setState({ messages, loadingData: false, roomName: "chatRoom" });
+            this.setState({ messages, loadingData: false });
         });
+        await this.unsubscribeRoom(this.state.roomName);
+        if (this.state.receiverDb) {
+            await this.unsubscribeRoom(this.state.receiverDb);
+        }
+        await this.subscribeRoom(roomName);
+        this.setState({ roomName: roomName });
     }
 
     selectUser = async (user) => {
@@ -95,14 +103,22 @@ class Home2 extends Component {
             })
             this.setState({ messages })
         })
-        this.setState({ roomName: senderDb, loadingData: false });
+
+        await this.unsubscribeRoom(this.state.roomName);
         await this.subscribeRoom(senderDb);
+
+        if (this.state.receiverDb) {
+            await this.unsubscribeRoom(this.state.receiverDb);
+        }
         await this.subscribeRoom(receiverDb);
+
+        this.setState({ roomName: senderDb, receiverDb, loadingData: false });
     }
 
     subscribeRoom = async (roomName) => {
-        await database().ref(roomName).limitToLast(1).on("child_added", snap => {
+        await database().ref().child(roomName).limitToLast(1).on("child_added", snap => {
             if (this.state.messages.filter(msg => msg.key === snap.key).length === 0) {
+                console.log(roomName, snap.val())
                 let newMsg = {
                     uid: snap.val().uid,
                     time: snap.val().time,
@@ -113,6 +129,11 @@ class Home2 extends Component {
                 this.setState({ messages: [...this.state.messages, newMsg] })
             }
         })
+    }
+
+    unsubscribeRoom = async (roomName) => {
+        console.log("off", roomName)
+        await database().ref(roomName).off();
     }
 
     render() {
@@ -128,6 +149,7 @@ class Home2 extends Component {
                                     usersList={this.state.usersList}
                                     selectUser={this.selectUser}
                                     getMessageFromRoom={this.getMessageFromRoom}
+                                    loadingData={this.state.loadingData}
                                 />
                                 <Message
                                     userId={this.state.userId}
