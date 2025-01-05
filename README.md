@@ -10,6 +10,7 @@ Quick Start:
 
 - ``` git clone ```
 - ``` cd react-firebase-chat ```
-- create a firebase config file on /src
+- create a firebase `config.ts` file on /src folder
 - ``` npm install ```
-- ``` npm start ```
+- ``` npm run dev ```
+- ``` npm run build ```
