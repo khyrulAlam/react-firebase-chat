@@ -16,6 +16,7 @@ const UsersList = () => {
   const { chatRoomId, oneToOneRoomId } = useChat();
   const dispatch = useChatDispatch();
   const [userList, setUserList] = useState<User[] | []>([]);
+  const [userCount, setUserCount] = useState<number>(0);
 
   useEffect(() => {
     setLoading(true);
@@ -24,7 +25,13 @@ const UsersList = () => {
       const data = snapshot.val();
       if (data) {
         const users = Object.values(data) as User[];
-        setUserList(users.filter((user) => user.uid !== authUser?.uid));
+        setUserCount(users.length || 0);
+        // Remove duplicate users and the current user
+        const uniqueUsers = users.filter(
+          (user, index, self) =>
+            user.uid && user.uid !== authUser?.uid && index === self.findIndex((u) => u.uid === user.uid)
+        );
+        setUserList(uniqueUsers);
         dispatch({
           type: ChatActionType.SET_USER_LIST,
           payload: data,
@@ -87,7 +94,7 @@ const UsersList = () => {
                 src={authUser?.profile_picture}
                 colorPalette={"orange"}
               />
-              <Avatar colorPalette={'orange'} fallback={`+${numberFormatter.format(userList?.length)}`} />
+              <Avatar colorPalette={'orange'} fallback={`+${numberFormatter.format(userCount)}`} />
             </AvatarGroup>
             <Text fontWeight="medium" textStyle={"sm"} lineClamp={1}>
               Common Group
