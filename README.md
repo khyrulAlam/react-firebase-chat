@@ -19,7 +19,7 @@ Quick Start:
 
 ## Releases notes:
 
-### Version 1.0.0
+### [Version 1.0.0](https://github.com/khyrulAlam/react-firebase-chat/releases/tag/v1.0.0)
 
 - Initial release of the chat application.
 - Implemented real-time messaging using Firebase real-time Database.
@@ -28,7 +28,7 @@ Quick Start:
 - Deployed live demo.
 
 
-### Version 2.0.0
+### [Version 2.0.0](https://github.com/khyrulAlam/react-firebase-chat/releases/tag/v2.0.0)
 
 - Migrated from React 16 to React 18.
 - Added TypeScript for type safety.
