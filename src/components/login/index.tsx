@@ -1,6 +1,6 @@
 import { Flex, Button, Image, Text, Card } from "@chakra-ui/react";
 import { useAuthDispatch } from "@/context/Auth";
-import { AuthActionEnum } from "@/context/Auth/types";
+import { AuthActionEnum, User } from "@/context/Auth/types";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -20,12 +20,13 @@ const Login = () => {
         new GoogleAuthProvider()
       );
       const additionalUserInfo = getAdditionalUserInfo(result);
-      const userInfo = {
+      const userInfo: User = {
         email: result.user.email || "",
         fullName: result.user.displayName || "",
         profile_picture: result.user.photoURL || "",
         uid: result.user.uid,
         userName: (additionalUserInfo?.profile?.given_name as string) || "",
+        createdAt: new Date().getTime(),
       };
 
       await addUserInfo(userInfo);

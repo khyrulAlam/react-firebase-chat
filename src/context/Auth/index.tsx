@@ -33,6 +33,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
             profile_picture: currentUser.photoURL || "",
             uid: currentUser.uid,
             userName: currentUser.displayName || "",
+            createdAt: new Date(currentUser.metadata.creationTime || '').getTime(),
           },
         });
       }
