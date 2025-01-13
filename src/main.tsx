@@ -5,8 +5,11 @@ import App from './App.tsx'
 import { Provider } from './components/ui/provider.tsx'
 import AuthProvider from './context/Auth/index.tsx'
 
+// unregister service worker
+import './registerServiceWorker.ts'
+
 // firebase initialization
-import "./config.ts";
+import "@/config.ts";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
