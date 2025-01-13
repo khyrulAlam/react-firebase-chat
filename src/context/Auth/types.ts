@@ -4,6 +4,7 @@ export type User = {
     profile_picture: string;
     userName: string;
     uid: string;
+    createdAt: number;
 }
 
 export type AuthState = {

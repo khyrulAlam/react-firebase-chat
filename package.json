@@ -1,8 +1,14 @@
 {
   "name": "react-firebase-chat",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
+  "author": {
+    "name": "Khayrul Alam",
+    "email": "khyrulalam69@gmail.com",
+    "github": "https://github.com/khyrulAlam",
+    "linkedin": "https://www.linkedin.com/in/khayrul-alam-360291aa/"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

@@ -1,6 +1,7 @@
 import { firebaseDatabase } from "@/config";
 import { User } from "@/context/Auth/types";
 import { MessageSnapshotResponse } from "@/context/Chat/types";
+import { DB_NAME } from "@/utils";
 import {
   child,
   get,
@@ -13,7 +14,7 @@ import {
 } from "firebase/database";
 
 export const addUserInfo = async (user: User) => {
-  const collectionRef = ref(firebaseDatabase, "usersTable");
+  const collectionRef = ref(firebaseDatabase, DB_NAME.USER_TABLE);
   const snapshot = await child(collectionRef, user.uid);
   if (!snapshot.key) {
     set(snapshot, user);
@@ -33,7 +34,7 @@ const fetchMessages = async (
 
 export const fetchCommonRoomMessages =
   async (): Promise<MessageSnapshotResponse> => {
-    const collectionRef = ref(firebaseDatabase, "chatRoom");
+    const collectionRef = ref(firebaseDatabase, DB_NAME.CHAT_ROOM);
     // By default the fetch item is sorted by timestamp
     return fetchMessages(collectionRef);
   };

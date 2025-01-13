@@ -1,9 +1,10 @@
+import { DB_NAME } from "@/utils";
 import { ACTION_TYPE, ChatState } from "./types";
 
 export const initialState: ChatState = {
   userList: {},
   isLoading: false,
-  chatRoomId: "chatRoom",
+  chatRoomId: DB_NAME.CHAT_ROOM,
   oneToOneRoomId: "",
 };
 

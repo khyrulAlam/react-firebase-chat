@@ -29,3 +29,6 @@ dist-ssr
 
 #config
 /src/config.ts
+
+.firebase
+.vscode

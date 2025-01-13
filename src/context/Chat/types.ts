@@ -15,7 +15,7 @@ export type MessageSnapshotResponse = {
 export type ChatState = {
     userList: {[key: string]: User};
     isLoading: boolean;
-    chatRoomId: string | 'chatRoom';  
+    chatRoomId: string;  
     oneToOneRoomId: string;
 };
 
@@ -38,7 +38,7 @@ type SET_LOADING = {
 type SET_CHAT_ROOM_ID = {
     type: ChatActionType.SET_CHAT_ROOM_ID;
     payload: {
-        chatRoomId: string | 'chatRoom';
+        chatRoomId: string;
         oneToOneRoomId: string;
     };
 };
