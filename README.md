@@ -38,3 +38,9 @@ Quick Start:
 - Refactored codebase from class components to function components.
 - Utilized React Context API for state management.
 - Various code optimizations and improvements.
+
+
+### [Version 2.1.0](https://github.com/khyrulAlam/react-firebase-chat/releases/tag/v2.1.0)
+
+- Contacts Search by name.
+- User list sort by created at.
